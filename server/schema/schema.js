@@ -95,8 +95,14 @@ const BookType = new GraphQLObjectType({
     id: { type: GraphQLID },
     title: { type: GraphQLString },
     published: { type: GraphQLInt },
-    author: { type: GraphQLID },
-    //genres: { type: GraphQLList },
+    author: { type: GraphQLString },
+    authorBook: {
+      type: AuthorType,
+      resolve(parent, args) {
+        return authors.find((author) => author.name === parent.author);
+      },
+    },
+    //genres: { type: GraphQLString },
   }),
 });
 
@@ -107,6 +113,12 @@ const AuthorType = new GraphQLObjectType({
     born: { type: GraphQLInt },
     name: { type: GraphQLString },
     id: { type: GraphQLID },
+    book: {
+      type: new GraphQLList(BookType),
+      resolve(parent, args) {
+        return books.filter((book) => book.author === parent.name);
+      },
+    },
   }),
 });
 
