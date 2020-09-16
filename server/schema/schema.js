@@ -53,6 +53,32 @@ let books = [
   },
 ];
 
+let authors = [
+  {
+    name: 'Robert Martin',
+    id: 'afa51ab0-344d-11e9-a414-719c6709cf3e',
+    born: 1952,
+  },
+  {
+    name: 'Martin Fowler',
+    id: 'afa5b6f0-344d-11e9-a414-719c6709cf3e',
+    born: 1963,
+  },
+  {
+    name: 'Fyodor Dostoevsky',
+    id: 'afa5b6f1-344d-11e9-a414-719c6709cf3e',
+    born: 1821,
+  },
+  {
+    name: 'Joshua Kerievsky', // birthyear not known
+    id: 'afa5b6f2-344d-11e9-a414-719c6709cf3e',
+  },
+  {
+    name: 'Sandi Metz', // birthyear not known
+    id: 'afa5b6f3-344d-11e9-a414-719c6709cf3e',
+  },
+];
+
 const {
   GraphQLObjectType,
   GraphQLID,
@@ -62,17 +88,29 @@ const {
   GraphQLSchema,
 } = graphql;
 
+/** BOOK OBJECT TYPE */
 const BookType = new GraphQLObjectType({
   name: 'Book',
   fields: () => ({
     id: { type: GraphQLID },
     title: { type: GraphQLString },
     published: { type: GraphQLInt },
-    author: { type: GraphQLString },
+    author: { type: GraphQLID },
     //genres: { type: GraphQLList },
   }),
 });
 
+/** AUTHOR OBJECT TYPE */
+const AuthorType = new GraphQLObjectType({
+  name: 'Author',
+  fields: () => ({
+    born: { type: GraphQLInt },
+    name: { type: GraphQLString },
+    id: { type: GraphQLID },
+  }),
+});
+
+/** QUERY OBJECT TYPE */
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
@@ -83,6 +121,14 @@ const RootQuery = new GraphQLObjectType({
         return books.find((book) => book.title === args.title);
       },
     },
+    author: {
+      type: AuthorType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return authors.find((author) => author.id === args.id);
+      },
+    },
   },
 });
+
 module.exports = new GraphQLSchema({ query: RootQuery });
