@@ -1,6 +1,7 @@
 import React from 'react';
 import BookList from './components/BookList';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import AddBook from './components/AddBook';
 
 // Apollo Client Setup
 const client = new ApolloClient({
@@ -12,9 +13,10 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-      <div id="main">
+      <div className="container">
         <h1>Kakos Ninja</h1>
         <BookList />
+        <AddBook />
       </div>
     </ApolloProvider>
   );
