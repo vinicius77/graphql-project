@@ -10,6 +10,7 @@ const {
   GraphQLList,
   GraphQLSchema,
   GraphQLError,
+  GraphQLNonNull,
 } = graphql;
 
 /** ----------------------------------
@@ -122,7 +123,7 @@ const Mutation = new GraphQLObjectType({
     addAuthor: {
       type: AuthorType,
       args: {
-        name: { type: GraphQLString },
+        name: { type: new GraphQLNonNull(GraphQLString) },
         born: { type: GraphQLInt },
       },
       async resolve(parent, args) {
@@ -142,7 +143,7 @@ const Mutation = new GraphQLObjectType({
     addBook: {
       type: BookType,
       args: {
-        title: { type: GraphQLString },
+        title: { type: new GraphQLNonNull(GraphQLString) },
         published: { type: GraphQLInt },
         author: { type: GraphQLString },
       },
