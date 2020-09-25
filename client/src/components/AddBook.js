@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 
-/** Importing Queries  */
-import { GET_AUTHORS_QUERY } from '../queries/queries';
+/** Importing Queries / Mutations */
+import {
+  GET_AUTHORS_QUERY,
+  CREATE_BOOK,
+  GET_BOOKS_QUERY,
+} from '../queries/queries';
 
 const AddBook = () => {
   const { loading, data } = useQuery(GET_AUTHORS_QUERY);
   const [book, setBook] = useState({ title: '', published: '', author: '' });
+
+  /** Executes the CREATE_BOOK Mutation */
+  const [createBook] = useMutation(CREATE_BOOK, {
+    refetchQueries: [{ query: GET_BOOKS_QUERY }],
+  });
 
   const displayAuthors = () => {
     if (loading) {
@@ -26,7 +35,13 @@ const AddBook = () => {
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
+
+    const { title, published, author } = book;
     console.log(book);
+
+    createBook({ variables: { title, published, author } });
+
+    setBook({ title: '', published: '', author: '' });
   };
 
   return (
@@ -52,7 +67,7 @@ const AddBook = () => {
             name="published"
             className="form-control"
             onChange={(event) => {
-              setBook({ ...book, published: event.target.value });
+              setBook({ ...book, published: parseInt(event.target.value) });
             }}
           />
         </div>
